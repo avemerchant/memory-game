@@ -1,0 +1,181 @@
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+public class MemoryGameController {
+
+    private MemoryGameModel model;
+    private MemoryGameView gameView;
+    private Stage stage;
+    private boolean waiting = false;
+
+    /*
+     * purpose: constructor that begins the program by showing the difficulty menu
+     * input: Stage stage - the main application window
+     * output: none
+     * assumptions: stage is already created and passed in from the Application class
+     */
+    public MemoryGameController(Stage stage) {
+        this.stage = stage;
+        showDifficultySelection();
+    }
+
+    /*
+     * purpose: display the difficulty selection screen and attach button actions
+     * input: none
+     * output: none
+     * assumptions: DifficultyView exists and provides Easy/Medium/Hard buttons
+     */
+    private void showDifficultySelection() {
+        DifficultyView diffView = new DifficultyView();
+        Scene scene = new Scene(diffView.getRoot(), 400, 400);
+        stage.setScene(scene);
+        stage.show();
+
+        diffView.getEasyButton().setOnAction(e -> startGame(4, 4));
+        diffView.getMediumButton().setOnAction(e -> startGame(6, 6));
+        diffView.getHardButton().setOnAction(e -> startGame(8, 8));
+    }
+
+    /*
+     * purpose: create a new game with the chosen board size and show the game screen
+     * input: rows - number of rows on the board
+     *        cols - number of columns on the board
+     * output: none
+     * assumptions: rows * cols is even
+     */
+    private void startGame(int rows, int cols) {
+        model = new MemoryGameModel(rows, cols);
+        gameView = new MemoryGameView(rows, cols);
+
+        Scene scene = new Scene(gameView.getRoot(), 450, 450);
+        stage.setScene(scene);
+
+        attachButtonHandlers(rows, cols);
+    }
+
+    /*
+     * purpose: attach event handlers to every button in the board grid
+     * input: rows - an int variable that represents the number of rows
+     *        cols - an int variable that represents the number of columns
+     * output: none
+     * assumptions: gameView and model are both initialized
+     */
+    private void attachButtonHandlers(int rows, int cols) {
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                int row = r;
+                int col = c;
+                gameView.getButton(row, col).setOnAction(e -> handleFlip(row, col));
+            }
+        }
+    }
+
+    /*
+     * purpose: handle what happens when a tile is clicked (flip, check match, etc.)
+     * input: r - an int variable that represents the number of rows
+     *        c - an int variable that represents the number of columns
+     * output: none
+     * assumptions: r and c lead to a tile on the board
+     */
+    private void handleFlip(int r, int c) {
+        if (waiting) return;
+
+        boolean twoFlipped = flipTileAndUpdateButton(r, c);
+
+        if (twoFlipped) {
+            waiting = true;
+
+            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+            pause.setOnFinished(e -> checkAndProcessMatch());
+            pause.play();
+        }
+    }
+    
+    /*
+     * purpose: flip the selected tile and update its button state
+     * input: r - an int variable that represents the number of rows
+     *        c - an int variable that represents the number of columns
+     * output: boolean - true if two tiles have been flipped, false otherwise
+     * assumptions: r and c lead to a tile on the board
+     */
+    private boolean flipTileAndUpdateButton(int r, int c) {
+        boolean twoFlipped = model.flipTile(r, c);
+        updateButton(r, c);
+        return twoFlipped;
+    }
+    
+    /*
+     * purpose: check if the two flipped tiles match and update the game state accordingly
+     * input: none
+     * output: none
+     * assumptions: two tiles have been flipped and `waiting` is set to true
+     */
+    private void checkAndProcessMatch() {
+        if (model.checkMatch()) {
+            model.markMatched();
+        } else {
+            model.flipBack();
+        }
+        refreshBoard();
+
+        waiting = false;
+
+        if (model.allMatched()) {
+            showWinScreen();
+        }
+    }
+
+    /*
+     * purpose: show a "play again?" win screen when the game ends
+     * input: none
+     * output: none
+     * assumptions: stage exists
+     */
+    private void showWinScreen() {
+        PlayAgainView winView = new PlayAgainView();
+
+        Scene winScene = new Scene(winView.getRoot(), 400, 300);
+        stage.setScene(winScene);
+
+        winView.getPlayAgainButton().setOnAction(e -> showDifficultySelection());
+        winView.getQuitButton().setOnAction(e -> stage.close());
+    }
+
+    /*
+     * purpose: update the text displayed on a single button
+     * input: r - row index
+     *        c - column index
+     * output: none
+     * assumptions: r and c reference a valid tile
+     */
+    private void updateButton(int r, int c) {
+        MemoryGameModel.Tile t = model.getTile(r, c);
+        switch (t.getState()) {
+            case FACE_DOWN:
+                gameView.updateButton(r, c, "???");
+                break;
+            case FACE_UP:
+                gameView.updateButton(r, c, t.getValue());
+                break;
+            case MATCHED:
+                gameView.updateButton(r, c, "");
+                break;
+        }
+    }
+
+    /*
+     * purpose: refresh all buttons to match the model
+     * input: none
+     * output: none
+     * assumptions: model and view match in dimensions
+     */
+    private void refreshBoard() {
+        for (int r = 0; r < model.getRows(); r++) {
+            for (int c = 0; c < model.getCols(); c++) {
+                updateButton(r, c);
+            }
+        }
+    }
+}
