@@ -1,0 +1,15 @@
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+public class MemoryGame extends Application {
+	/*
+	 * purpose: initializes the MemoryGameController object and starts the game window
+	 * input: stage - a Stage object that portrays the game window
+	 * output: none
+	 * assumptions: none
+	 */
+    public void start(Stage stage) {
+        new MemoryGameController(stage);
+        stage.show();
+    }
+}
