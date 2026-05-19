@@ -26,6 +26,7 @@ Document your solution using a UML class diagram showing all classes and relatio
 5. Suggestions:
 
 • The TilePuzzle is a good example to use for this assignment. The GridPanel, buttons and the MVC architecture are all used in the TilePuzzle game.
+
 • A PauseTransition can be used to pause the game after two tiles are flipped to allow the user time to look at the values. See below for an example. You will need to import import javafx.animation.PauseTransition; PauseTransition pause = new PauseTransition(Duration.seconds(2)); pause.setOnFinished(e -> { // Add other actions to perform after the pause here System.out.println("inside pause event"); }); pause.play();
 
 7. Extra Credit (10 points)
