@@ -16,8 +16,11 @@ Document your solution using a UML class diagram showing all classes and relatio
 4. Grading and Submission:
 
 • Code that does not compile or cannot be run will receive at least 80% off
+
 • 45% - Implement all requirements described in this assignment
+
 • 35% - Following all the criteria listed in the 276Rubics.pdf (Note this contains commenting and having your design match your implementation)
+
 • 20% - UML diagram- Submit all your java code files and your UML diagram. Only java and pdf files will be accepted. Please ensure I can run your java files.
 
 5. Suggestions:
