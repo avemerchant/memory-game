@@ -1,5 +1,5 @@
 # memory-game
-This is a collection of files that I made for the sake of a homework assignment for CSC 276: Object Oriented Software Design. The instructions were along the lines of: Create a memory game that is played with tiles where each tile has 2 sides. The memory game starts with a board of 4x4 tiles. Extra Credit: Allow the user to choose the level of difficulty. This project and game were created using Java FX and model view controller architecture. 
+This is a collection of files that I made for the sake of a homework assignment for CSC 276: Object Oriented Software Design. The instructions were along the lines of: Create a memory game that is played with tiles that each have 2 sides. The memory game starts with a board of 4x4 tiles. Extra Credit: Allow the user to choose the level of difficulty. This project and game were created using Java FX and model view controller architecture. 
 
 The total instructions for this assignment are as follows: 
 In this assignment you will create memory game using Java FX and you design your implementation using the model view controller architecture. 
@@ -25,3 +25,5 @@ Document your solution using a UML class diagram showing all classes and relatio
 
 6. Extra Credit (10 points)
 Allow the user to choose between three levels of play. Easy will present a 4x4 board, Intermediate will present a 5x5 board and Hard will present a 6X6 board
+
+As part of the class rubric, I also had to include comments above each of my functions that explained the purpose, inputs, and outputs of that function. All of the code in this repository are copy and pasted from files that were created using Java on Eclipse. 
