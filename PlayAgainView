@@ -1,0 +1,60 @@
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.geometry.Pos;
+
+/*
+ * purpose: small view displayed after the player wins, offering Play Again or Quit
+ */
+public class PlayAgainView {
+
+    private VBox root;
+    private Button playAgainButton;
+    private Button quitButton;
+
+    /*
+     * purpose: constructs a PlayAgainView object and displays a message that the player won
+     * input: none
+     * output: none but the VBox is created
+     * assumptions: the object is created when the player wins the game
+     */
+    public PlayAgainView() {
+        Label winLabel = new Label("You Win!");
+
+        playAgainButton = new Button("Play Again");
+        quitButton = new Button("Quit");
+
+        root = new VBox(12, winLabel, playAgainButton, quitButton);
+        root.setAlignment(Pos.CENTER);
+    }
+
+    /*
+     * purpose: returns root for scene placement
+     * input: none
+     * output: VBox root
+     * assumptions: none
+     */
+    public VBox getRoot() {
+        return root;
+    }
+
+    /*
+     * purpose: returns button at (r,c)
+     * input: none
+     * output: playAgainButton - a Button object 
+     * assumptions: none
+     */
+    public Button getPlayAgainButton() {
+        return playAgainButton;
+    }
+
+    /*
+     * purpose: returns button at (r,c)
+     * input: none
+     * output: quitButton - a Button object
+     * assumptions: none
+     */
+    public Button getQuitButton() {
+        return quitButton;
+    }
+}
