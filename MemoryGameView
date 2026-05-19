@@ -1,0 +1,71 @@
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.control.Button;
+import javafx.geometry.Pos;
+
+public class MemoryGameView {
+
+    private VBox root;
+    private Button[][] buttons;
+
+    /*
+     * purpose: constructs the MemoryGameView object and builds the game board
+     * input: rows - number of rows on the board
+     *        cols - number of columns on the board
+     * output: none
+     * assumptions: rows * cols matches board size from the controller
+     */
+    public MemoryGameView(int rows, int cols) {
+        buttons = new Button[rows][cols];
+
+        HBox[] rowBoxes = new HBox[rows];
+
+        for (int r = 0; r < rows; r++) {
+            Button[] rowButtons = new Button[cols];
+            for (int c = 0; c < cols; c++) {
+                Button b = new Button("???");
+                b.setPrefSize(60, 60);
+                rowButtons[c] = b;
+            }
+            rowBoxes[r] = new HBox(10, rowButtons);
+            rowBoxes[r].setAlignment(Pos.CENTER);
+            buttons[r] = rowButtons;
+        }
+
+        root = new VBox(10, rowBoxes);
+        root.setAlignment(Pos.CENTER);
+    }
+
+    /*
+     * purpose: returns root for scene placement
+     * input: none
+     * output: VBox root
+     * assumptions: none
+     */
+    public VBox getRoot() {
+        return root;
+    }
+
+    /*
+     * purpose: returns button at (r,c)
+     * input: r - an int variable that represents the row
+     *        c - an int variable that represents the column
+     * output: buttons[r][c] - a Button object
+     * assumptions: r and c lead to a tile on the board
+     */
+    public Button getButton(int r, int c) {
+        return buttons[r][c];
+    }
+
+    /*
+     * purpose: update the text shown on a tile
+     * input: r - an int variable that represents the row
+     *        c - an int variable that represents the column
+     *        text - a String variable with new text
+     * output: none
+     * assumptions: r and c lead to a tile on the board
+     */
+    public void updateButton(int r, int c, String text) {
+        buttons[r][c].setText(text);
+    }
+}
