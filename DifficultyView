@@ -1,0 +1,70 @@
+import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
+import javafx.geometry.Pos;
+
+/*
+ * purpose: small view displayed before the game starts, offering for the 
+ *          player to pick a difficulty level
+ */
+public class DifficultyView {
+
+    private VBox root;
+    private Button easyButton;
+    private Button mediumButton;
+    private Button hardButton;
+
+    /*
+     * purpose: creates the difficulty selection screen with the three difficulty buttons
+     * input: none
+     * output: none
+     * assumptions: this is called by the controller before the game starts
+     */
+    public DifficultyView() {
+        easyButton = new Button("Easy (4x4)");
+        mediumButton = new Button("Intermediate (6x6)");
+        hardButton = new Button("Hard (8x8)");
+
+        root = new VBox(15, easyButton, mediumButton, hardButton);
+        root.setAlignment(Pos.CENTER);
+    }
+
+    /*
+     * purpose: returns the root VBox so the controller can place it inside the Scene
+     * input: none
+     * output: root - the VBox object 
+     * assumptions: none
+     */
+    public VBox getRoot() { 
+    	return root; 
+    }
+    
+    /*
+     * purpose: provide access to the Easy difficulty button
+     * input: none
+     * output: easyButton - a Button
+     * assumptions: easyButton is initialized
+     */
+    public Button getEasyButton() { 
+    	return easyButton; 
+    }
+    
+    /*
+     * purpose: provide access to the Medium difficulty button
+     * input: none
+     * output: mediumButton - a Button
+     * assumptions: mediumButton is initialized
+     */
+    public Button getMediumButton() { 
+    	return mediumButton; 
+    }
+    
+    /*
+     * purpose: provide access to the Hard difficulty button
+     * input: none
+     * output: hardButton - a Button
+     * assumptions: hardButton is initialized
+     */
+    public Button getHardButton() { 
+    	return hardButton; 
+    }
+}
