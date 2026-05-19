@@ -1,0 +1,226 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class MemoryGameModel {
+
+    public enum TileState { FACE_DOWN, FACE_UP, MATCHED }
+
+    public class Tile {
+        private String value;
+        private TileState state;
+
+        /*
+         * purpose: constructs a new tile with a value and set it face down
+         * input: value - a String variable that represents what is shown on the card
+         * output: none
+         * assumptions: value is not null
+         */
+        public Tile(String value) {
+            this.value = value;
+            this.state = TileState.FACE_DOWN;
+        }
+
+        /*
+         * purpose: returns the value shown on the tile
+         * input: none
+         * output: value - a String variable that represents what is shown on the card
+         * assumptions: none
+         */
+        public String getValue() {
+            return value;
+        }
+
+        /*
+         * purpose: returns the state of the tile
+         * input: none
+         * output: state - the TileState of the tile (face down, face up, or matched)
+         * assumptions: none
+         */
+        public TileState getState() {
+            return state;
+        }
+
+        /*
+         * purpose: updates the state of the tile
+         * input: s - the TileState that the tile will take on
+         * output: none but the state of the tile is updated
+         * assumptions: s is a valid TileState value
+         */
+        public void setState(TileState s) {
+            state = s;
+        }
+    }
+
+    private Tile[][] board;
+    private int rows;
+    private int cols;
+
+    private Tile firstTile = null;
+    private Tile secondTile = null;
+
+    /*
+     * purpose: initializes the MemoryGameModel with the number of rows and columns that the game has
+     * input: rows - an int variable that represents the number of rows
+     *        cols - an int variable that represents the number of columns
+     * output: none
+     * assumptions: rows * cols is even
+     */
+    public MemoryGameModel(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        setupBoard();
+    }
+
+    /*
+     * purpose: create and shuffle all tile pairs and place them on the board
+     * input: none
+     * output: none but the board field is initialized with shuffled tile pairs
+     * assumptions: rows * cols is even
+     */
+    private void setupBoard() {
+        board = new Tile[rows][cols];
+        ArrayList<String> values = new ArrayList<>();
+        int pairs = (rows * cols) / 2;
+
+        for (int i = 1; i <= pairs; i++) {
+            values.add("" + i);
+            values.add("" + i);
+        }
+
+        //shuffles the tiles
+        Collections.shuffle(values);
+
+        int index = 0;
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                board[r][c] = new Tile(values.get(index++));
+            }
+        }
+
+        // ensure flips are cleared
+        resetFlips();
+    }
+
+    /*
+     * purpose: reset and re-initialize the board for a new game (re-shuffle pairs)
+     * input: none
+     * output: none but the board is re-created and tile states reset
+     * assumptions: rows and columns are unchanged and rows*cols is even
+     */
+    public void reset() {
+        setupBoard();
+    }
+
+    /*
+     * purpose: return the number of rows on the board
+     * input: none
+     * output: rows - an int variable that represents the number of rows on the board
+     * assumptions: none
+     */
+    public int getRows() {
+        return rows;
+    }
+
+    /*
+     * purpose: return the number of columns on the board
+     * input: none
+     * output: cols - an int variable that represents the number of columns on the board
+     * assumptions: none
+     */
+    public int getCols() {
+        return cols;
+    }
+
+    /*
+     * purpose: returns the tile at a given position
+     * input: r - an int variable that represents the row
+     *        c - an int variable that represents the column
+     * output: board[r][c] - a Tile at board[r][c]
+     * assumptions: r and c lead to a tile on the board
+     */
+    public Tile getTile(int r, int c) {
+        return board[r][c];
+    }
+
+    /*
+     * purpose: flip a tile face-up and track whether it is the first or second flipped tile
+     * input: r - row index
+     *        c - column index
+     * output: boolean - true if this flip completes a pair (second tile), false otherwise
+     * assumptions: r and c are valid indices and the tile is not already matched or face-up
+     */
+    public boolean flipTile(int r, int c) {
+        Tile t = board[r][c];
+        if (t.getState() != TileState.FACE_DOWN) return false;
+
+        t.setState(TileState.FACE_UP);
+        if (firstTile == null) {
+            firstTile = t;
+            return false;
+        } else {
+            secondTile = t;
+            return true;
+        }
+    }
+
+    /*
+     * purpose: determine whether the two currently flipped tiles match
+     * input: none
+     * output: boolean - true if the two flipped tiles have the same value
+     * assumptions: firstTile and secondTile have been set
+     */
+    public boolean checkMatch() {
+        if (firstTile == null || secondTile == null) return false;
+        return firstTile.getValue().equals(secondTile.getValue());
+    }
+
+    /*
+     * purpose: mark the two currently flipped tiles as matched
+     * input: none
+     * output: none
+     * assumptions: firstTile and secondTile are not null
+     */
+    public void markMatched() {
+        firstTile.setState(TileState.MATCHED);
+        secondTile.setState(TileState.MATCHED);
+        resetFlips();
+    }
+
+    /*
+     * purpose: flip the two currently flipped tiles back face-down
+     * input: none
+     * output: none
+     * assumptions: firstTile and secondTile are not null
+     */
+    public void flipBack() {
+        firstTile.setState(TileState.FACE_DOWN);
+        secondTile.setState(TileState.FACE_DOWN);
+        resetFlips();
+    }
+
+    /*
+     * purpose: clear the stored first and second tile
+     * input: none
+     * output: none
+     * assumptions: none
+     */
+    private void resetFlips() {
+        firstTile = null;
+        secondTile = null;
+    }
+
+    /*
+     * purpose: check whether every tile has been matched
+     * input: none
+     * output: boolean - true if all tiles are matched, false otherwise
+     * assumptions: board is fully initialized
+     */
+    public boolean allMatched() {
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (board[r][c].getState() != TileState.MATCHED) return false;
+            }
+        }
+        return true;
+    }
+}
